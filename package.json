@@ -1,0 +1,28 @@
+{
+  "name": "express-iconify",
+  "version": "0.0.1",
+  "description": "express iconify server also sub app",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "rm -rf dist && tsc -p ./tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "iconify"
+  ],
+  "author": "noootwo",
+  "license": "MIT",
+  "dependencies": {
+    "@iconify/json": "^2.2.262",
+    "@iconify/utils": "^2.1.33",
+    "express": "^4.18.2",
+    "lru-cache": "^11.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.9"
+  }
+}
