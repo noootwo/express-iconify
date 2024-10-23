@@ -12,8 +12,6 @@ import {
   rotateFromString,
 } from "@iconify/utils";
 
-const iconify = express(); // the sub app
-
 const iconCache = new LRUCache<string, string>({
   max: 20000,
 });
@@ -95,27 +93,33 @@ const genIconHtml = async (
     });
 };
 
-iconify.get("/:iconSet/:iconName", (req, res) => {
-  const { iconSet, iconName } = req.params;
-  const query = (req.query || {}) as Record<string, string>;
+export const createIconifyApp = () => {
+  const iconify = express();
 
-  genIconHtml(iconSet, iconName, query)
-    .then((html) => {
-      // Send SVG, optionally as attachment
-      if (query.download) {
-        res.header(
-          "Content-Disposition",
-          'attachment; filename="' + iconName + '.svg"'
-        );
-      }
+  iconify.get("/:iconSet/:iconName", (req, res) => {
+    const { iconSet, iconName } = req.params;
+    const query = (req.query || {}) as Record<string, string>;
 
-      res.type("image/svg+xml; charset=utf-8").send(html);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(404).send("Icon not found");
-    });
-});
+    genIconHtml(iconSet, iconName, query)
+      .then((html) => {
+        // Send SVG, optionally as attachment
+        if (query.download) {
+          res.header(
+            "Content-Disposition",
+            'attachment; filename="' + iconName + '.svg"'
+          );
+        }
+
+        res.type("image/svg+xml; charset=utf-8").send(html);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(404).send("Icon not found");
+      });
+  });
+
+  return iconify;
+};
 
 export const mountIconify = (
   app: express.Express,
@@ -124,7 +128,8 @@ export const mountIconify = (
   }
 ) => {
   const { path = "/iconify" } = option || {};
+
+  const iconify = createIconifyApp();
+
   app.use(path, iconify);
 };
-
-export default iconify;

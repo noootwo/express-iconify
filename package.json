@@ -2,11 +2,16 @@
   "name": "express-iconify",
   "version": "0.0.1",
   "description": "express iconify server also sub app",
-  "type": "module",
   "main": "index.ts",
+  "homepage": "https://github.com/noootwo/express-iconify",
+  "bugs": "https://github.com/noootwo/express-iconify/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:noootwo/express-iconify.git"
+  },
   "scripts": {
-    "start": "node ./dist/index.js",
-    "build": "rm -rf dist && tsc -p ./tsconfig.json",
+    "start": "node ./dist/app.js",
+    "build": "tsc -p ./tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
