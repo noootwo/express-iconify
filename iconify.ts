@@ -93,7 +93,7 @@ const genIconHtml = async (
     });
 };
 
-export const createIconifyApp = () => {
+export const createIconifyApp = (): express.Express => {
   const iconify = express();
 
   iconify.get("/:iconSet/:iconName", (req, res) => {
