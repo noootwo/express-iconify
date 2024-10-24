@@ -1,6 +1,6 @@
 {
   "name": "express-iconify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "express iconify server also sub app",
   "main": "index.ts",
   "homepage": "https://github.com/noootwo/express-iconify",
