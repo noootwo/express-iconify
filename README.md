@@ -2,6 +2,8 @@
 
 A lightweight Express.js server for serving Iconify icons.
 
+[English Doc](README.md) | [中文文档](README_zh.md)
+
 ## Overview
 
 This project provides a simple and efficient way to serve Iconify icons using Express.js. It allows you to easily integrate Iconify icons into your web applications.
@@ -32,11 +34,9 @@ You can import the Iconify server into your external Express project and mount i
 - `app`: An Express application instance.
 - `option`: An optional options object that configures the behavior of `mountIconify`.
 
-The `option` object has an optional `path` property that specifies the mount point path. If `path` is not specified, the default mount point is `/iconify`.
-
 ##### Options
 
-- `path`: The mount point path. Defaults to `/iconify`.
+- `path`: The mount point path. Optional, Defaults to `/iconify`.
 
 ##### Returns
 
