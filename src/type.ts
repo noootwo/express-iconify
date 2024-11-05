@@ -4,7 +4,7 @@ export interface IconifyAppOption {
   /** The maximum size of the cache, default is `10000` */
   cacheMaxSize?: number;
 
-  /** Whether to set the `Last-Modified` header, default is `false` */
+  /** Whether to set the `Last-Modified` header, default is `true` */
   enableLastModified?: boolean;
 
   /** Whether to enable CORS, default is `false` */
