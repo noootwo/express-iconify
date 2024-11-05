@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "moduleResolution": "node",
-    "rootDir": "./",
+    "rootDir": "./src",
     "declaration": true,
     "sourceMap": true,
     "esModuleInterop": true,
@@ -11,5 +11,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["."]
+  "include": ["./src"]
 }

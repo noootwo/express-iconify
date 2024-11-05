@@ -1,5 +1,5 @@
+import type { IconifyAppOption, MountIconifyOption } from "./type";
 import express from "express";
-import { LRUCache } from "lru-cache";
 import { lookupCollection } from "@iconify/json";
 import {
   defaultIconCustomisations,
@@ -11,31 +11,35 @@ import {
   iconToSVG,
   rotateFromString,
 } from "@iconify/utils";
+import { getIconCache } from "./cache";
 
-const iconCache = new LRUCache<string, string>({
-  max: 20000,
-});
+const getIcon = async (
+  icon: {
+    iconSet: string;
+    iconName: string;
+    query: Record<string, string>;
+  },
+  option?: Pick<IconifyAppOption, "cache" | "cacheMaxSize">
+): Promise<{ html: string; lastModified: number } | null> => {
+  const { iconSet, iconName, query } = icon;
+  const { cache, cacheMaxSize } = option || {};
+  const iconCache = getIconCache({ cacheMaxSize });
 
-const genIconHtml = async (
-  iconSet: string,
-  iconName: string,
-  query: Record<string, string>
-) => {
-  const cacheKey = `${iconSet}-${iconName}:${Object.entries(query)
-    .map(([key, value]) => `${key}:${value}`)
-    .join(",")}`;
+  let cacheKey = "";
+  if (cache) {
+    cacheKey = `${iconSet}-${iconName}:${Object.entries(query)
+      .map(([key, value]) => `${key}:${value}`)
+      .join(",")}`;
 
-  if (iconCache.has(cacheKey)) {
-    return Promise.resolve(iconCache.get(cacheKey) as string);
+    if (iconCache.has(cacheKey))
+      return Promise.resolve(iconCache.get(cacheKey)!);
   }
 
   return lookupCollection(iconSet)
     .then((data) => {
       const iconData = getIconData(data, iconName);
 
-      if (!iconData) {
-        return null;
-      }
+      if (!iconData) return null;
 
       // Clean up customisations
       const customisations: IconifyIconCustomisations = {};
@@ -84,8 +88,13 @@ const genIconHtml = async (
         html = html.split("currentColor").join(color);
       }
 
-      iconCache.set(cacheKey, html);
-      return html;
+      const res = {
+        html,
+        lastModified: data.lastModified ? data.lastModified * 1000 : Date.now(),
+      };
+      if (cache && cacheKey) iconCache.set(cacheKey, res);
+
+      return res;
     })
     .catch((err) => {
       console.error(err);
@@ -93,21 +102,39 @@ const genIconHtml = async (
     });
 };
 
-export const createIconifyApp = (): express.Express => {
+export const createIconifyApp = (
+  option?: IconifyAppOption
+): express.Express => {
   const iconify = express();
 
   iconify.get("/:iconSet/:iconName", (req, res) => {
     const { iconSet, iconName } = req.params;
     const query = (req.query || {}) as Record<string, string>;
+    const {
+      download = false,
+      enableLastModified = true,
+      enableCORS = false,
+    } = option || {};
 
-    genIconHtml(iconSet, iconName, query)
-      .then((html) => {
-        // Send SVG, optionally as attachment
-        if (query.download) {
+    getIcon({ iconSet, iconName, query })
+      .then((icon) => {
+        if (!icon) return Promise.reject();
+
+        const { html, lastModified } = icon;
+
+        if (query.download ?? download) {
           res.header(
             "Content-Disposition",
             'attachment; filename="' + iconName + '.svg"'
           );
+        }
+
+        if (enableLastModified) {
+          res.header("Last-Modified", new Date(lastModified).toUTCString());
+        }
+
+        if (enableCORS) {
+          res.header("Access-Control-Allow-Origin", "*");
         }
 
         res.type("image/svg+xml; charset=utf-8").send(html);
@@ -123,13 +150,11 @@ export const createIconifyApp = (): express.Express => {
 
 export const mountIconify = (
   app: express.Express,
-  option?: {
-    path?: string;
-  }
+  option?: MountIconifyOption
 ) => {
-  const { path = "/iconify" } = option || {};
+  const { path = "/iconify", ...rest } = option || {};
 
-  const iconify = createIconifyApp();
+  const iconify = createIconifyApp(rest);
 
   app.use(path, iconify);
 };

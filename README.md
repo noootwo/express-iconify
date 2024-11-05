@@ -36,7 +36,12 @@ You can import the Iconify server into your external Express project and mount i
 
 ##### Options
 
-- `path`: The mount point path. Optional, Defaults to `/iconify`.
+- `path`: The path to mount the iconify app, default is `/iconify`.
+- `cache`: Whether to cache the icon data in memory. Default is `true`.
+- `cacheMaxSize`: The maximum size of the cache. Default is `10000`.
+- `enableLastModified`: Whether to set the `Last-Modified` header. Default is `true`.
+- `enableCORS`: Whether to enable CORS. Default is `false`.
+- `download`: Whether to serve the icon as an attachment. Default is `false`.
 
 ##### Returns
 

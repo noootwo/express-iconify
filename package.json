@@ -36,12 +36,13 @@
   "dependencies": {
     "@iconify/json": "^2.2.262",
     "@iconify/utils": "^2.1.33",
-    "express": "^4.18.2",
+    "express": "5.0.0",
     "lru-cache": "^11.0.1"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
+    "@types/express": "5.0.0",
     "@types/node": "^22.7.9",
+    "bumpp": "^9.8.1",
     "rimraf": "^6.0.1"
   }
 }
