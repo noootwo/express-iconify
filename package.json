@@ -1,6 +1,6 @@
 {
   "name": "express-iconify",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An express sub app for iconify, can also be used directly as a server",
   "homepage": "https://github.com/noootwo/express-iconify",
   "bugs": "https://github.com/noootwo/express-iconify/issues",
