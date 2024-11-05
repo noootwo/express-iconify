@@ -1,6 +1,6 @@
 {
   "name": "express-iconify",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An express sub app for iconify, can also be used directly as a server",
   "homepage": "https://github.com/noootwo/express-iconify",
   "bugs": "https://github.com/noootwo/express-iconify/issues",
@@ -25,6 +25,7 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "build": "npm run clean && npm run build:cjs && npm run build:esm",
     "clean": "rimraf dist",
+    "publish": "npm run build && bumpp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
